@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Valentine 💕</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background: linear-gradient(#ffd6e8,#fff0f6);
+    color:#7a2c4b;
+    text-align:center;
+    overflow-x:hidden;
+}
+
+h1,h2{
+    font-family:'Pacifico', cursive;
+}
+
+.section{
+    display:none;
+    padding:40px 20px;
+    min-height:100vh;
+}
+
+.active{
+    display:block;
+}
+
+/* Floating hearts */
+.heart{
+    position:fixed;
+    bottom:-20px;
+    width:20px;
+    height:20px;
+    background:pink;
+    transform:rotate(45deg);
+    animation: floatUp 8s infinite;
+}
+.heart::before,.heart::after{
+    content:'';
+    width:20px;height:20px;
+    background:pink;
+    border-radius:50%;
+    position:absolute;
+}
+.heart::before{top:-10px;}
+.heart::after{left:-10px;}
+
+@keyframes floatUp{
+    0%{transform:translateY(0) rotate(45deg); opacity:1;}
+    100%{transform:translateY(-100vh) rotate(45deg); opacity:0;}
+}
+
+button{
+    padding:12px 25px;
+    border:none;
+    border-radius:30px;
+    background:#ff8fb1;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    margin-top:20px;
+}
+
+input[type="file"]{
+    margin:10px;
+}
+
+.photo-preview img{
+    width:150px;
+    border-radius:15px;
+    margin:10px;
+}
+
+.quiz-options button{
+    display:block;
+    margin:10px auto;
+    width:80%;
+}
+
+.link-box{
+    background:white;
+    padding:15px;
+    margin:15px;
+    border-radius:15px;
+}
+
+#countdown{
+    font-size:20px;
+    margin-top:10px;
+    color:#ff4f8b;
+}
+</style>
+</head>
+
+<body>
+
+<div id="countdown"></div>
+
+<!-- Section 1 Welcome -->
+<div id="welcome" class="section active">
+    <h1>Welcome to your gift made by your incredible girlfriend 💖</h1>
+    <button onclick="openPhotos()">Click Here 💌</button>
+</div>
+
+<!-- Section 2 Photo Upload -->
+<div id="photos" class="section">
+    <h2>Your favourite photo of me</h2>
+    <input type="file" onchange="previewImage(event,'img1')">
+    <div id="img1" class="photo-preview"></div>
+
+    <h2>Your favourite photo of us</h2>
+    <input type="file" onchange="previewImage(event,'img2')">
+    <div id="img2" class="photo-preview"></div>
+
+    <h2>According to you, our favourite date photo</h2>
+    <input type="file" onchange="previewImage(event,'img3')">
+    <div id="img3" class="photo-preview"></div>
+
+    <button onclick="openQuiz()">Next 💕</button>
+</div>
+
+<!-- Section 3 Quiz -->
+<div id="quiz" class="section">
+<h2>Quiz for you 💖</h2>
+
+<div id="quizBox"></div>
+
+<button onclick="submitQuiz()">Submit Answers</button>
+
+<div id="quizResult"></div>
+</div>
+
+<!-- Section 4 Gift -->
+<div id="gift" class="section">
+<h2>Okay time for gift 🎁</h2>
+
+<div class="link-box">
+<h3>A playlist by me 🎵</h3>
+<a href="https://open.spotify.com/playlist/3Y8gEECQDg75UNyBvIOXnN?si=tghvD3vkSCSyrXZX-aF9PA&pi=qNHxH8SiTuWUJ" target="_blank">Open Playlist</a>
+</div>
+
+<div class="link-box">
+<h3>A presentation of love for you 💌</h3>
+<a href="https://docs.google.com/presentation/d/12UhejbXvDumXO6HOMCgybvSWrCrBXEcq/edit?usp=drive_link&ouid=116661771871433757710&rtpof=true&sd=true" target="_blank">Open Presentation</a>
+</div>
+
+<h2>I choose you in every lifetime 💕</h2>
+</div>
+
+<script>
+
+/* COUNTDOWN LOCK */
+const unlockDate = new Date("Feb 14, 2026 00:00:00").getTime();
+const countdownEl = document.getElementById("countdown");
+
+setInterval(()=>{
+    const now = new Date().getTime();
+    const distance = unlockDate - now;
+
+    if(distance > 0){
+        const hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+        const minutes = Math.floor((distance%(1000*60*60))/(1000*60));
+        const seconds = Math.floor((distance%(1000*60))/1000);
+        countdownEl.innerHTML = "Unlocks in "+hours+"h "+minutes+"m "+seconds+"s";
+        document.getElementById("welcome").innerHTML =
+        "<h2>The gift you are trying to reach is currently not available. Please try at midnight.</h2>";
+    } else {
+        countdownEl.innerHTML = "It's time 💖";
+    }
+},1000);
+
+
+/* Navigation */
+function openPhotos(){
+    showSection("photos");
+}
+function openQuiz(){
+    showSection("quiz");
+}
+function openGift(){
+    showSection("gift");
+}
+
+function showSection(id){
+    document.querySelectorAll(".section").forEach(sec=>sec.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+/* Image preview */
+function previewImage(event,id){
+    const container = document.getElementById(id);
+    container.innerHTML="";
+    const img=document.createElement("img");
+    img.src=URL.createObjectURL(event.target.files[0]);
+    container.appendChild(img);
+}
+
+/* QUIZ QUESTIONS */
+const questions=[
+{
+q:"What's my way of saying that i love you without saying that i love you",
+options:["laugh at your silly jokes","tucking back my hairs","doe eyes trick","sharing food"],
+correct:[0,2]
+},
+{
+q:"What's my way of getting you to do what i want",
+options:["logical explanation","assert dominance","illogical theories in cute way","just saying please"],
+correct:[2]
+},
+{
+q:"My response when i am jealous",
+options:["Go talk to her","starts crying","stalks her","NOOO im not jealous"],
+correct:[3]
+},
+{
+q:"Body part i like most of you",
+options:["neck","hands with veins","abs","shy"],
+correct:[1]
+},
+{
+q:"How do i express love",
+options:["clingy","listening","flirty","say i love you"],
+correct:[1]
+}
+];
+
+const quizBox=document.getElementById("quizBox");
+
+questions.forEach((item,i)=>{
+    const div=document.createElement("div");
+    div.innerHTML="<p>"+(i+1)+". "+item.q+"</p>";
+    item.options.forEach((opt,j)=>{
+        div.innerHTML+=`<label><input type="radio" name="q${i}" value="${j}"> ${opt}</label><br>`;
+    });
+    quizBox.appendChild(div);
+});
+
+function submitQuiz(){
+    let score=0;
+    let answers=[];
+
+    questions.forEach((q,i)=>{
+        const val=document.querySelector('input[name="q'+i+'"]:checked');
+        if(val){
+            answers.push(val.value);
+            if(q.correct.includes(parseInt(val.value))){
+                score++;
+            }
+        }
+    });
+
+    console.log("His answers:",answers);
+
+    if(score>=3){
+        document.getElementById("quizResult").innerHTML="Awww you know me so well 😌💕";
+        openGift();
+    } else {
+        document.getElementById("quizResult").innerHTML="Huhhhhh seriously?? 😒";
+    }
+}
+
+/* Floating hearts generator */
+setInterval(()=>{
+    const heart=document.createElement("div");
+    heart.classList.add("heart");
+    heart.style.left=Math.random()*100+"vw";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),8000);
+},400);
+
+</script>
+
+</body>
+</html>
